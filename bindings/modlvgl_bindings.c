@@ -2,6 +2,7 @@
 #include "py/runtime.h"
 #include "py/binary.h"
 #include "mod_lvgl.h"
+#include "esp_lvgl_port.h"
 
 typedef struct {
     mp_obj_base_t base;
@@ -16,7 +17,11 @@ static mp_obj_t mp_lvgl_load(mp_obj_t data_in) {
 
     canvas_obj_t *obj = mp_obj_malloc_with_finaliser(canvas_obj_t, &canvas_type);
 
-    if (!mod_lvgl_load(&obj->canvas, (const uint8_t *)bufinfo.buf, bufinfo.len)) {
+    lvgl_port_lock(0);
+    bool ok = mod_lvgl_load(&obj->canvas, (const uint8_t *)bufinfo.buf, bufinfo.len);
+    lvgl_port_unlock();
+
+    if (!ok) {
         mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("lvgl_load failed"));
     }
 
@@ -49,7 +54,9 @@ static mp_obj_t mp_lvgl_rectangle(size_t n_args, const mp_obj_t *args) {
     int width   = mp_obj_get_int(args[4]);
     int radius  = mp_obj_get_int(args[5]);
 
+    lvgl_port_lock(0);
     mod_lvgl_rect(&self->canvas, x1, y1, x2, y2, fill, outline, width, radius);
+    lvgl_port_unlock();
 
     return mp_const_none;
 }
@@ -77,7 +84,9 @@ static mp_obj_t mp_lvgl_line(size_t n_args, const mp_obj_t *args) {
 
     int fill = mp_obj_get_int(args[2]);
 
+    lvgl_port_lock(0);
     mod_lvgl_line(&self->canvas, x1, y1, x2, y2, fill);
+    lvgl_port_unlock();
 
     return mp_const_none;
 }
@@ -107,7 +116,9 @@ static mp_obj_t mp_lvgl_text(size_t n_args, const mp_obj_t *args) {
     const char *anchor = mp_obj_str_get_str(args[5]);
 
     lv_area_t box;
+    lvgl_port_lock(0);
     mod_lvgl_text(&self->canvas, x, y, fill, text, font, anchor, &box);
+    lvgl_port_unlock();
 
     mp_obj_t tuple[4] = {
         mp_obj_new_int(box.x1),

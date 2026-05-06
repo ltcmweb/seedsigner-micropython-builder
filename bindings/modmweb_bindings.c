@@ -33,4 +33,4 @@ const mp_obj_module_t mweb_user_cmodule = {
     .globals = (mp_obj_dict_t *)&mweb_module_globals,
 };
 
-MP_REGISTER_MODULE(MP_QSTR_mweb, mweb_user_cmodule);
+MP_REGISTER_MODULE(MP_QSTR_mweb_go, mweb_user_cmodule);

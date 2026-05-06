@@ -2,6 +2,7 @@
 #include "py/runtime.h"
 #include "py/binary.h"
 #include "mod_lvgl.h"
+#include "esp_lvgl_port.h"
 
 typedef struct {
     mp_obj_base_t base;
@@ -12,7 +13,7 @@ extern const mp_obj_type_t canvas_type;
 
 static mp_obj_t canvas_make_new(const mp_obj_type_t *type, size_t n_args,
                                 size_t n_kw, const mp_obj_t *args) {
-    mp_arg_check_num(n_args, n_kw, 2, 2, false);
+    mp_arg_check_num(n_args, n_kw, 2, 3, false);
 
     const char *mode = mp_obj_str_get_str(args[0]);
 
@@ -27,12 +28,18 @@ static mp_obj_t canvas_make_new(const mp_obj_type_t *type, size_t n_args,
     int w = mp_obj_get_int(size_items[0]);
     int h = mp_obj_get_int(size_items[1]);
 
+    bool visible = n_args > 2 ? mp_obj_is_true(args[2]) : false;
+
     canvas_obj_t *self = mp_obj_malloc_with_finaliser(canvas_obj_t, type);
 
     self->canvas.buf = NULL;
     self->canvas.canvas = NULL;
 
-    if (!mod_lvgl_canvas_init(&self->canvas, mode, w, h)) {
+    lvgl_port_lock(0);
+    bool ok = mod_lvgl_canvas_init(&self->canvas, mode, w, h, visible);
+    lvgl_port_unlock();
+
+    if (!ok) {
         mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("canvas_init failed"));
     }
 
@@ -103,7 +110,9 @@ static mp_obj_t canvas_copyto(mp_obj_t self_in, mp_obj_t other_in, mp_obj_t pos_
     int x = mp_obj_get_int(coords[0]);
     int y = mp_obj_get_int(coords[1]);
 
+    lvgl_port_lock(0);
     mod_lvgl_canvas_copyto(&other->canvas, &self->canvas, x, y);
+    lvgl_port_unlock();
 
     return mp_const_none;
 }

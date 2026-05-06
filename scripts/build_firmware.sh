@@ -55,7 +55,8 @@ idf.py --version >/dev/null 2>&1 || { echo "ERROR: idf.py not runnable (GHCR bas
 PORTS_ESP32_DIR="$ROOT_DIR/ports/esp32"
 USER_C_MODULES_FILE="$ROOT_DIR/usercmodule.cmake"
 MICROPY_CMAKE_ARGS="${CMAKE_ARGS:-} -DUSER_C_MODULES=$USER_C_MODULES_FILE"
-MICROPY_CMAKE_ARGS="$MICROPY_CMAKE_ARGS -DMICROPY_EXTRA_COMPONENT_DIRS=${PORTS_ESP32_DIR}\;${CMODS_DIR}/components\;${PORTS_ESP32_DIR}/board_common/components -DCMAKE_C_FLAGS=\"-I$PORTS_ESP32_DIR/board_common/include -include $PORTS_ESP32_DIR/board_common/include/defs.h\""
+CFLAGS_EXTRA="-I$PORTS_ESP32_DIR/board_common/include -include $PORTS_ESP32_DIR/board_common/include/defs.h"
+MICROPY_CMAKE_ARGS="$MICROPY_CMAKE_ARGS -DMICROPY_EXTRA_COMPONENT_DIRS=${PORTS_ESP32_DIR}\;${CMODS_DIR}/components\;${PORTS_ESP32_DIR}/board_common/components\;${PORTS_ESP32_DIR}/board_common/components/esp-camera-pipeline/components -DCMAKE_C_FLAGS=\"$CFLAGS_EXTRA\""
 MICROPY_CMAKE_ARGS="$MICROPY_CMAKE_ARGS -DSEEDSIGNER_C_MODULES_DIR=$CMODS_DIR"
 
 # board_common board config: maps MicroPython board name to board_common board dir.
@@ -93,6 +94,7 @@ MICROPY_CMAKE_ARGS="$MICROPY_CMAKE_ARGS -DSEEDSIGNER_DISPLAY_HEIGHT=$SEEDSIGNER_
     BUILD="$BUILD_DIR" \
     USER_C_MODULES="$USER_C_MODULES_FILE" \
     CMAKE_ARGS="$MICROPY_CMAKE_ARGS" \
+    CFLAGS_EXTRA="$CFLAGS_EXTRA" \
     MICROPY_MPYCROSS="$MP_DIR/mpy-cross/build/mpy-cross" \
     IDF_CCACHE_ENABLE=1 ${TARGET:-all}
 
