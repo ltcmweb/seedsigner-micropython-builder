@@ -13,6 +13,13 @@ target_sources(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/Font_Awesome_6_Free_24.c
     ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/Font_Awesome_6_Free_36.c
     ${SEEDSIGNER_C_MODULES_DIR}/components/seedsigner/fonts/opensans_regular_17_4bpp_125x.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/ripemd160.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/sha2.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/hmac.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/pbkdf2.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/memzero.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/hashlib.c
+    ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/uhmac.c
 )
 
 target_include_directories(usermod_dm INTERFACE
