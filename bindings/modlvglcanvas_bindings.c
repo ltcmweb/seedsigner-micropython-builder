@@ -32,9 +32,6 @@ static mp_obj_t canvas_make_new(const mp_obj_type_t *type, size_t n_args,
 
     canvas_obj_t *self = mp_obj_malloc_with_finaliser(canvas_obj_t, type);
 
-    self->canvas.buf = NULL;
-    self->canvas.canvas = NULL;
-
     lvgl_port_lock(0);
     bool ok = mod_lvgl_canvas_init(&self->canvas, mode, w, h, visible);
     lvgl_port_unlock();
@@ -49,10 +46,9 @@ static mp_obj_t canvas_make_new(const mp_obj_type_t *type, size_t n_args,
 static mp_obj_t canvas_del(mp_obj_t self_in) {
     canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
 
-    if (self->canvas.buf) {
-        lv_free(self->canvas.buf);
-        self->canvas.buf = NULL;
-    }
+    lvgl_port_lock(0);
+    mod_lvgl_canvas_del(&self->canvas);
+    lvgl_port_unlock();
 
     return mp_const_none;
 }
