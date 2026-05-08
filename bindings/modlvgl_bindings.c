@@ -11,6 +11,16 @@ typedef struct {
 
 extern const mp_obj_type_t canvas_type;
 
+static mp_obj_t mp_lvgl_screen_size() {
+    mp_obj_t tuple[2] = {
+        mp_obj_new_int(lv_obj_get_width(lv_screen_active())),
+        mp_obj_new_int(lv_obj_get_height(lv_screen_active())),
+    };
+
+    return mp_obj_new_tuple(2, tuple);
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(mp_lvgl_screen_size_obj, mp_lvgl_screen_size);
+
 static mp_obj_t mp_lvgl_load(mp_obj_t data_in) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data_in, &bufinfo, MP_BUFFER_READ);
@@ -92,6 +102,39 @@ static mp_obj_t mp_lvgl_line(size_t n_args, const mp_obj_t *args) {
 }
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_line_obj, 3, 3, mp_lvgl_line);
 
+static mp_obj_t mp_lvgl_arc(size_t n_args, const mp_obj_t *args) {
+    if (!mp_obj_is_type(args[0], &canvas_type)) {
+        mp_raise_TypeError(MP_ERROR_TEXT("expected Canvas"));
+    }
+
+    canvas_obj_t *self = MP_OBJ_TO_PTR(args[0]);
+
+    size_t len;
+    mp_obj_t *coords;
+    mp_obj_get_array(args[1], &len, &coords);
+
+    if (len != 4) {
+        mp_raise_ValueError(MP_ERROR_TEXT("coords must be 4-tuple"));
+    }
+
+    int x1 = mp_obj_get_int(coords[0]);
+    int y1 = mp_obj_get_int(coords[1]);
+    int x2 = mp_obj_get_int(coords[2]);
+    int y2 = mp_obj_get_int(coords[3]);
+
+    int start = mp_obj_get_int(args[2]);
+    int end = mp_obj_get_int(args[3]);
+    int fill = mp_obj_get_int(args[4]);
+    int width = mp_obj_get_int(args[5]);
+
+    lvgl_port_lock(0);
+    mod_lvgl_arc(&self->canvas, x1, y1, x2, y2, start, end, fill, width);
+    lvgl_port_unlock();
+
+    return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_arc_obj, 6, 6, mp_lvgl_arc);
+
 static mp_obj_t mp_lvgl_text(size_t n_args, const mp_obj_t *args) {
     if (!mp_obj_is_type(args[0], &canvas_type)) {
         mp_raise_TypeError(MP_ERROR_TEXT("expected Canvas"));
@@ -133,9 +176,11 @@ static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_text_obj, 6, 6, mp_lvgl_text)
 
 static const mp_rom_map_elem_t lvgl_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_lvgl) },
+    { MP_ROM_QSTR(MP_QSTR_screen_size), MP_ROM_PTR(&mp_lvgl_screen_size_obj) },
     { MP_ROM_QSTR(MP_QSTR_load), MP_ROM_PTR(&mp_lvgl_load_obj) },
     { MP_ROM_QSTR(MP_QSTR_rectangle), MP_ROM_PTR(&mp_lvgl_rectangle_obj) },
     { MP_ROM_QSTR(MP_QSTR_line), MP_ROM_PTR(&mp_lvgl_line_obj) },
+    { MP_ROM_QSTR(MP_QSTR_arc), MP_ROM_PTR(&mp_lvgl_arc_obj) },
     { MP_ROM_QSTR(MP_QSTR_text), MP_ROM_PTR(&mp_lvgl_text_obj) },
     { MP_ROM_QSTR(MP_QSTR_Canvas), MP_ROM_PTR(&canvas_type) },
 };
