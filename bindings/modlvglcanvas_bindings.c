@@ -59,8 +59,8 @@ static mp_obj_t canvas_size(mp_obj_t self_in) {
     canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
 
     mp_obj_t tuple[2] = {
-        mp_obj_new_int(self->canvas.w),
-        mp_obj_new_int(self->canvas.h),
+        MP_OBJ_NEW_SMALL_INT(self->canvas.w),
+        MP_OBJ_NEW_SMALL_INT(self->canvas.h),
     };
 
     return mp_obj_new_tuple(2, tuple);
