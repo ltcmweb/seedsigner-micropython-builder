@@ -53,7 +53,7 @@ extern "C" void seedsigner_board_startup(void)
         lv_obj_set_style_bg_color(lv_screen_active(), lv_color_black(), 0);
 #if SEEDSIGNER_DEBUG
         lv_obj_t *label = lv_label_create(lv_screen_active());
-        lv_label_set_text(label, "device ready");
+        lv_label_set_text(label, "Loading, please wait...");
         lv_obj_set_style_text_color(label, lv_color_make(128, 128, 128), 0);
         lv_obj_center(label);
 #endif

@@ -1,6 +1,6 @@
 #include "py/obj.h"
 #include "py/runtime.h"
-#include "py/binary.h"
+#include "py/gc.h"
 #include "mod_lvgl.h"
 #include "esp_lvgl_port.h"
 
@@ -27,12 +27,13 @@ static mp_obj_t mp_lvgl_load(mp_obj_t data_in) {
 
     canvas_obj_t *obj = mp_obj_malloc_with_finaliser(canvas_obj_t, &canvas_type);
 
-    lvgl_port_lock(0);
-    bool ok = mod_lvgl_load(&obj->canvas, (const uint8_t *)bufinfo.buf, bufinfo.len);
-    lvgl_port_unlock();
-
-    if (!ok) {
-        mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("lvgl_load failed"));
+    for (int i = 0; i < 2; i++) {
+        lvgl_port_lock(0);
+        bool ok = mod_lvgl_load(&obj->canvas, (const uint8_t *)bufinfo.buf, bufinfo.len);
+        lvgl_port_unlock();
+        if (ok) break;
+        if (i) mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("lvgl_load failed"));
+        gc_collect();
     }
 
     return MP_OBJ_FROM_PTR(obj);
@@ -174,6 +175,20 @@ static mp_obj_t mp_lvgl_text(size_t n_args, const mp_obj_t *args) {
 }
 static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_text_obj, 6, 6, mp_lvgl_text);
 
+static mp_obj_t mp_lvgl_putalpha(size_t n_args, const mp_obj_t *args) {
+    if (!mp_obj_is_type(args[0], &canvas_type)) {
+        mp_raise_TypeError(MP_ERROR_TEXT("expected Canvas"));
+    }
+
+    canvas_obj_t *self = MP_OBJ_TO_PTR(args[0]);
+    int alpha = mp_obj_get_int(args[1]);
+
+    mod_lvgl_putalpha(&self->canvas, alpha);
+
+    return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_putalpha_obj, 2, 2, mp_lvgl_putalpha);
+
 static const mp_rom_map_elem_t lvgl_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_lvgl) },
     { MP_ROM_QSTR(MP_QSTR_screen_size), MP_ROM_PTR(&mp_lvgl_screen_size_obj) },
@@ -182,6 +197,7 @@ static const mp_rom_map_elem_t lvgl_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_line), MP_ROM_PTR(&mp_lvgl_line_obj) },
     { MP_ROM_QSTR(MP_QSTR_arc), MP_ROM_PTR(&mp_lvgl_arc_obj) },
     { MP_ROM_QSTR(MP_QSTR_text), MP_ROM_PTR(&mp_lvgl_text_obj) },
+    { MP_ROM_QSTR(MP_QSTR_putalpha), MP_ROM_PTR(&mp_lvgl_putalpha_obj) },
     { MP_ROM_QSTR(MP_QSTR_Canvas), MP_ROM_PTR(&canvas_type) },
 };
 

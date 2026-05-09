@@ -1,6 +1,6 @@
 #include "py/obj.h"
 #include "py/runtime.h"
-#include "py/binary.h"
+#include "py/gc.h"
 #include "mod_lvgl.h"
 #include "esp_lvgl_port.h"
 
@@ -32,12 +32,13 @@ static mp_obj_t canvas_make_new(const mp_obj_type_t *type, size_t n_args,
 
     canvas_obj_t *self = mp_obj_malloc_with_finaliser(canvas_obj_t, type);
 
-    lvgl_port_lock(0);
-    bool ok = mod_lvgl_canvas_init(&self->canvas, mode, w, h, visible);
-    lvgl_port_unlock();
-
-    if (!ok) {
-        mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("canvas_init failed"));
+    for (int i = 0; i < 2; i++) {
+        lvgl_port_lock(0);
+        bool ok = mod_lvgl_canvas_init(&self->canvas, mode, w, h, visible);
+        lvgl_port_unlock();
+        if (ok) break;
+        if (i) mp_raise_msg(&mp_type_MemoryError, MP_ERROR_TEXT("canvas_init failed"));
+        gc_collect();
     }
 
     return MP_OBJ_FROM_PTR(self);
