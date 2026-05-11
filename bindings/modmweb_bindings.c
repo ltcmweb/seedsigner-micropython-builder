@@ -23,7 +23,7 @@ static mp_obj_t mp_mweb(mp_obj_t fn_obj, mp_obj_t req_obj) {
 static MP_DEFINE_CONST_FUN_OBJ_2(mweb_obj, mp_mweb);
 
 static const mp_rom_map_elem_t mweb_module_globals_table[] = {
-    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_mweb) },
+    { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_mweb_go) },
     { MP_ROM_QSTR(MP_QSTR_mweb), MP_ROM_PTR(&mweb_obj) },
 };
 static MP_DEFINE_CONST_DICT(mweb_module_globals, mweb_module_globals_table);

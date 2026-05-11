@@ -20,6 +20,8 @@ target_sources(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/memzero.c
     ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/hashlib.c
     ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/uhmac.c
+    ${CMAKE_CURRENT_LIST_DIR}/../qrcode/qrcodegen/qrcodegen.c
+    ${CMAKE_CURRENT_LIST_DIR}/../qrcode/qrcode.c
 )
 
 target_include_directories(usermod_dm INTERFACE
