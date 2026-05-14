@@ -60,10 +60,10 @@ static mp_obj_t mp_lvgl_rectangle(size_t n_args, const mp_obj_t *args) {
     int x2 = mp_obj_get_int(coords[2]);
     int y2 = mp_obj_get_int(coords[3]);
 
-    int fill    = mp_obj_get_int(args[2]);
-    int outline = mp_obj_get_int(args[3]);
-    int width   = mp_obj_get_int(args[4]);
-    int radius  = mp_obj_get_int(args[5]);
+    uint32_t fill = mp_obj_get_uint(args[2]);
+    uint32_t outline = mp_obj_get_uint(args[3]);
+    int width = mp_obj_get_int(args[4]);
+    int radius = mp_obj_get_int(args[5]);
 
     lvgl_port_lock(0);
     mod_lvgl_rect(&self->canvas, x1, y1, x2, y2, fill, outline, width, radius);
@@ -93,7 +93,7 @@ static mp_obj_t mp_lvgl_line(size_t n_args, const mp_obj_t *args) {
     int x2 = mp_obj_get_int(coords[2]);
     int y2 = mp_obj_get_int(coords[3]);
 
-    int fill = mp_obj_get_int(args[2]);
+    uint32_t fill = mp_obj_get_uint(args[2]);
 
     lvgl_port_lock(0);
     mod_lvgl_line(&self->canvas, x1, y1, x2, y2, fill);
@@ -125,7 +125,7 @@ static mp_obj_t mp_lvgl_arc(size_t n_args, const mp_obj_t *args) {
 
     int start = mp_obj_get_int(args[2]);
     int end = mp_obj_get_int(args[3]);
-    int fill = mp_obj_get_int(args[4]);
+    uint32_t fill = mp_obj_get_uint(args[4]);
     int width = mp_obj_get_int(args[5]);
 
     lvgl_port_lock(0);
@@ -156,12 +156,15 @@ static mp_obj_t mp_lvgl_text(size_t n_args, const mp_obj_t *args) {
 
     const char *text = mp_obj_str_get_str(args[2]);
     const char *font = mp_obj_str_get_str(args[3]);
-    int fill         = mp_obj_get_int(args[4]);
+    uint32_t fill = mp_obj_get_uint(args[4]);
     const char *anchor = mp_obj_str_get_str(args[5]);
+    int stroke_width = mp_obj_get_int(args[6]);
+    uint32_t stroke_fill = mp_obj_get_uint(args[7]);
 
     lv_area_t box;
     lvgl_port_lock(0);
-    mod_lvgl_text(&self->canvas, x, y, fill, text, font, anchor, &box);
+    mod_lvgl_text(&self->canvas, x, y, fill, text, font,
+                  anchor, stroke_width, stroke_fill, &box);
     lvgl_port_unlock();
 
     mp_obj_t tuple[4] = {
@@ -173,7 +176,7 @@ static mp_obj_t mp_lvgl_text(size_t n_args, const mp_obj_t *args) {
 
     return mp_obj_new_tuple(4, tuple);
 }
-static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_text_obj, 6, 6, mp_lvgl_text);
+static MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mp_lvgl_text_obj, 8, 8, mp_lvgl_text);
 
 static mp_obj_t mp_lvgl_putalpha(size_t n_args, const mp_obj_t *args) {
     if (!mp_obj_is_type(args[0], &canvas_type)) {

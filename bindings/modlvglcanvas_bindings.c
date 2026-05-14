@@ -70,8 +70,7 @@ static MP_DEFINE_CONST_FUN_OBJ_1(canvas_size_obj, canvas_size);
 static mp_obj_t canvas_tobytes(mp_obj_t self_in) {
     canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
 
-    return mp_obj_new_bytes((const byte *)self->canvas.buf,
-                            self->canvas.size);
+    return mp_obj_new_memoryview('B', self->canvas.size, self->canvas.buf);
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(canvas_tobytes_obj, canvas_tobytes);
 
