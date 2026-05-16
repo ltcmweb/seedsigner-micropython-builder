@@ -5,14 +5,14 @@ target_sources(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/modseedsigner_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/modsecp256k1_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/modmweb_bindings.c
-    ${CMAKE_CURRENT_LIST_DIR}/modlvgl_bindings.c
-    ${CMAKE_CURRENT_LIST_DIR}/modlvglcanvas_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/modcamera_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/modquirc_bindings.c
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/mod_lvgl.c
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/Inconsolata_SemiBold.c
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/Font_Awesome_6_Free_24.c
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl/Font_Awesome_6_Free_36.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/mod_lvgl.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/modlvgl_bindings.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/modlvglcanvas_bindings.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Inconsolata_SemiBold.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Font_Awesome_6_Free_24.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Font_Awesome_6_Free_36.c
     ${SEEDSIGNER_C_MODULES_DIR}/components/seedsigner/fonts/opensans_regular_17_4bpp_125x.c
     ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/ripemd160.c
     ${CMAKE_CURRENT_LIST_DIR}/../uhashlib/crypto/sha2.c
@@ -30,7 +30,6 @@ target_include_directories(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/../ports/esp32/display_manager
     ${CMAKE_CURRENT_LIST_DIR}/../ports/esp32/board_common/src
     ${CMAKE_CURRENT_LIST_DIR}/../ports/esp32/board_common/components/k_quirc/include
-    ${CMAKE_CURRENT_LIST_DIR}/../deps/seedsigner/src/lvgl
     ${CMAKE_CURRENT_LIST_DIR}/../deps/secp256k1
     ${SEEDSIGNER_C_MODULES_DIR}/components/seedsigner
     ${BOARD_CONFIG_DIR}
