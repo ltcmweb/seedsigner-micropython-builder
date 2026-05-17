@@ -94,6 +94,8 @@ static mp_obj_t qrcode_encode_to_rgb565(size_t n_args, const mp_obj_t *args) {
     int scale_y = mp_obj_get_int(args[4]);
     uint16_t *p = (uint16_t*)buf.buf + mp_obj_get_int(args[5]);
 
+    memset(buf.buf, 0xFF, buf.len);
+
     while (*s) {
         uint16_t *q = p, *r = p;
         for (char c; ; q += scale_x) {
