@@ -1,0 +1,26 @@
+--- deps/seedsigner-c-modules/third_party/lvgl/src/core/lv_obj_class.c	2026-05-19 12:45:53
++++ deps/micropython/upstream/ports/esp32/managed_components/lvgl__lvgl/src/core/lv_obj_class.c	2026-05-19 13:40:51
+@@ -90,11 +90,21 @@
+         LV_ASSERT_OBJ(parent, MY_CLASS);
+         if(parent->spec_attr == NULL) {
+             lv_obj_allocate_spec_attr(parent);
++            if(parent->spec_attr == NULL) {
++                lv_free(obj);
++                return NULL;
++            }
+         }
+ 
++        void *children = lv_realloc(parent->spec_attr->children,
++                                    sizeof(lv_obj_t *) * (parent->spec_attr->child_cnt + 1));
++        if(children == NULL) {
++            lv_free(obj);
++            return NULL;
++        }
++
+         parent->spec_attr->child_cnt++;
+-        parent->spec_attr->children = lv_realloc(parent->spec_attr->children,
+-                                                 sizeof(lv_obj_t *) * parent->spec_attr->child_cnt);
++        parent->spec_attr->children = children;
+         parent->spec_attr->children[parent->spec_attr->child_cnt - 1] = obj;
+     }
+ 

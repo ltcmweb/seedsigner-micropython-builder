@@ -10,6 +10,7 @@ target_sources(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/mod_lvgl.c
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/modlvgl_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/modlvglcanvas_bindings.c
+    ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Inconsolata_Regular.c
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Inconsolata_SemiBold.c
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Font_Awesome_6_Free_24.c
     ${CMAKE_CURRENT_LIST_DIR}/../lvgl/Font_Awesome_6_Free_36.c

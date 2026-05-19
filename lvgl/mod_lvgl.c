@@ -95,6 +95,46 @@ void mod_lvgl_arc(Canvas *canvas, int x1, int y1, int x2, int y2,
     lv_canvas_finish_layer(canvas->canvas, &layer);
 }
 
+typedef struct {
+    const char *name;
+    const lv_font_t *font;
+} font_map_entry_t;
+
+static const font_map_entry_t font_map[] = {
+    { "OpenSans-Regular-15", &opensans_regular_17_4bpp },
+    { "OpenSans-Regular-17", &opensans_regular_17_4bpp },
+    { "OpenSans-Regular-18", &opensans_regular_17_4bpp },
+    { "OpenSans-Regular-19", &opensans_regular_17_4bpp_125x },
+    { "OpenSans-Regular-20", &opensans_regular_17_4bpp_125x },
+    { "OpenSans-Regular-22", &opensans_regular_17_4bpp_125x },
+    { "OpenSans-Regular-24", &opensans_regular_17_4bpp_150x },
+    { "OpenSans-Regular-26", &opensans_regular_17_4bpp_150x },
+    { "OpenSans-SemiBold-17", &opensans_semibold_18_4bpp },
+    { "OpenSans-SemiBold-18", &opensans_semibold_18_4bpp },
+    { "OpenSans-SemiBold-20", &opensans_semibold_20_4bpp },
+    { "OpenSans-SemiBold-26", &opensans_semibold_26_4bpp },
+    { "Inconsolata-Regular-16", &Inconsolata_Regular },
+    { "Inconsolata-Regular-23", &Inconsolata_SemiBold },
+    { "Inconsolata-Regular-24", &Inconsolata_SemiBold },
+    { "Inconsolata-Regular-26", &Inconsolata_SemiBold },
+    { "Inconsolata-SemiBold-16", &Inconsolata_Regular },
+    { "Inconsolata-SemiBold-20", &Inconsolata_SemiBold },
+    { "Inconsolata-SemiBold-22", &Inconsolata_SemiBold },
+    { "Inconsolata-SemiBold-24", &Inconsolata_SemiBold },
+    { "seedsigner-icons-17", &seedsigner_icons_24_4bpp },
+    { "seedsigner-icons-22", &seedsigner_icons_24_4bpp },
+    { "seedsigner-icons-24", &seedsigner_icons_24_4bpp },
+    { "seedsigner-icons-26", &seedsigner_icons_24_4bpp },
+    { "seedsigner-icons-30", &seedsigner_icons_36_4bpp },
+    { "seedsigner-icons-34", &seedsigner_icons_36_4bpp },
+    { "seedsigner-icons-48", &seedsigner_icons_48_4bpp },
+    { "seedsigner-icons-50", &seedsigner_icons_48_4bpp },
+    { "Font_Awesome_6_Free-Solid-900-24", &Font_Awesome_6_Free_24 },
+    { "Font_Awesome_6_Free-Solid-900-26", &Font_Awesome_6_Free_24 },
+    { "Font_Awesome_6_Free-Solid-900-36", &Font_Awesome_6_Free_36 },
+    { 0 }
+};
+
 void mod_lvgl_text(Canvas *canvas, int x, int y, uint32_t fill,
     const char *text, const char *font, const char *anchor,
     int stroke_width, uint32_t stroke_fill, lv_area_t *box) {
@@ -111,64 +151,11 @@ void mod_lvgl_text(Canvas *canvas, int x, int y, uint32_t fill,
     dsc.outline_stroke_opa = stroke_fill >> 24;
     dsc.outline_stroke_width = stroke_width;
 
-    if (!strcmp(font, "OpenSans-Regular-15")) {
-        dsc.font = &opensans_regular_17_4bpp;
-    } else if (!strcmp(font, "OpenSans-Regular-17")) {
-        dsc.font = &opensans_regular_17_4bpp;
-    } else if (!strcmp(font, "OpenSans-Regular-18")) {
-        dsc.font = &opensans_regular_17_4bpp;
-    } else if (!strcmp(font, "OpenSans-Regular-19")) {
-        dsc.font = &opensans_regular_17_4bpp_125x;
-    } else if (!strcmp(font, "OpenSans-Regular-20")) {
-        dsc.font = &opensans_regular_17_4bpp_125x;
-    } else if (!strcmp(font, "OpenSans-Regular-22")) {
-        dsc.font = &opensans_regular_17_4bpp_125x;
-    } else if (!strcmp(font, "OpenSans-Regular-24")) {
-        dsc.font = &opensans_regular_17_4bpp_150x;
-    } else if (!strcmp(font, "OpenSans-Regular-26")) {
-        dsc.font = &opensans_regular_17_4bpp_150x;
-    } else if (!strcmp(font, "OpenSans-SemiBold-17")) {
-        dsc.font = &opensans_semibold_18_4bpp;
-    } else if (!strcmp(font, "OpenSans-SemiBold-18")) {
-        dsc.font = &opensans_semibold_18_4bpp;
-    } else if (!strcmp(font, "OpenSans-SemiBold-20")) {
-        dsc.font = &opensans_semibold_20_4bpp;
-    } else if (!strcmp(font, "OpenSans-SemiBold-26")) {
-        dsc.font = &opensans_semibold_26_4bpp;
-    } else if (!strcmp(font, "Inconsolata-Regular-23")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "Inconsolata-Regular-24")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "Inconsolata-Regular-26")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "Inconsolata-SemiBold-20")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "Inconsolata-SemiBold-22")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "Inconsolata-SemiBold-24")) {
-        dsc.font = &Inconsolata_SemiBold;
-    } else if (!strcmp(font, "seedsigner-icons-17")) {
-        dsc.font = &seedsigner_icons_24_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-22")) {
-        dsc.font = &seedsigner_icons_24_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-24")) {
-        dsc.font = &seedsigner_icons_24_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-26")) {
-        dsc.font = &seedsigner_icons_24_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-30")) {
-        dsc.font = &seedsigner_icons_36_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-34")) {
-        dsc.font = &seedsigner_icons_36_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-48")) {
-        dsc.font = &seedsigner_icons_48_4bpp;
-    } else if (!strcmp(font, "seedsigner-icons-50")) {
-        dsc.font = &seedsigner_icons_48_4bpp;
-    } else if (!strcmp(font, "Font_Awesome_6_Free-Solid-900-24")) {
-        dsc.font = &Font_Awesome_6_Free_24;
-    } else if (!strcmp(font, "Font_Awesome_6_Free-Solid-900-26")) {
-        dsc.font = &Font_Awesome_6_Free_24;
-    } else if (!strcmp(font, "Font_Awesome_6_Free-Solid-900-36")) {
-        dsc.font = &Font_Awesome_6_Free_36;
+    for (const font_map_entry_t *m = font_map; m->name; m++) {
+        if (!strcmp(font, m->name)) {
+            dsc.font = m->font;
+            break;
+        }
     }
 
     lv_point_t size;
