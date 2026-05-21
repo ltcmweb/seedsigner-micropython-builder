@@ -21,6 +21,15 @@ static mp_obj_t mp_lvgl_screen_size() {
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(mp_lvgl_screen_size_obj, mp_lvgl_screen_size);
 
+void esp_display_invert(bool);
+
+static mp_obj_t mp_lvgl_invert(mp_obj_t enabled) {
+    esp_display_invert(mp_obj_is_true(enabled));
+
+    return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_1(mp_lvgl_invert_obj, mp_lvgl_invert);
+
 static mp_obj_t mp_lvgl_load(mp_obj_t data_in) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data_in, &bufinfo, MP_BUFFER_READ);
@@ -248,6 +257,7 @@ static MP_DEFINE_CONST_FUN_OBJ_1(mp_lvgl_register_input_cb_obj, mp_lvgl_register
 static const mp_rom_map_elem_t lvgl_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_lvgl) },
     { MP_ROM_QSTR(MP_QSTR_screen_size), MP_ROM_PTR(&mp_lvgl_screen_size_obj) },
+    { MP_ROM_QSTR(MP_QSTR_invert), MP_ROM_PTR(&mp_lvgl_invert_obj) },
     { MP_ROM_QSTR(MP_QSTR_load), MP_ROM_PTR(&mp_lvgl_load_obj) },
     { MP_ROM_QSTR(MP_QSTR_rectangle), MP_ROM_PTR(&mp_lvgl_rectangle_obj) },
     { MP_ROM_QSTR(MP_QSTR_line), MP_ROM_PTR(&mp_lvgl_line_obj) },
