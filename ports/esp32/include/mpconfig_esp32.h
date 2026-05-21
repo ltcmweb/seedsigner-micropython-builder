@@ -1,0 +1,7 @@
+#include <mpconfigport.h>
+
+#undef MICROPY_FLOAT_IMPL
+#define MICROPY_FLOAT_IMPL                  (MICROPY_FLOAT_IMPL_DOUBLE)
+
+#undef MICROPY_PY_MACHINE_ADC
+#undef MICROPY_PY_MACHINE_ADC_BLOCK

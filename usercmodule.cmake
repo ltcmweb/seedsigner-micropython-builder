@@ -36,8 +36,8 @@ target_sources(usermod_dm INTERFACE
 target_include_directories(usermod_dm INTERFACE
     ${BOARD_CONFIG_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/deps/secp256k1
-    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/board_common/components/k_quirc/include
-    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/board_common/src
+    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/k_quirc/include
+    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/board_common/include
 )
 
 target_compile_options(usermod_dm INTERFACE
