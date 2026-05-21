@@ -2,10 +2,6 @@
 
 #include "driver/i2c_master.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * Initialise I2C master bus with the given pins.
  * Creates a recursive mutex for thread-safe access.
@@ -20,7 +16,3 @@ bool board_i2c_lock(uint32_t timeout_ms);
 
 /** Unlock the I2C bus. */
 void board_i2c_unlock(void);
-
-#ifdef __cplusplus
-}
-#endif

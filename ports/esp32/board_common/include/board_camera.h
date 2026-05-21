@@ -10,12 +10,6 @@
 #include "board.h"
 #include "board_config.h"
 #include "esp_err.h"
-#include <stdint.h>
-#include <stddef.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #if BOARD_HAS_CAMERA
 
@@ -65,7 +59,3 @@ esp_err_t board_camera_fb_get(board_camera_frame_t *frame, uint32_t timeout_ms);
 void board_camera_fb_return(board_camera_frame_t *frame);
 
 #endif /* BOARD_HAS_CAMERA */
-
-#ifdef __cplusplus
-}
-#endif
