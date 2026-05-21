@@ -9,15 +9,9 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 WORKDIR="${1:-$ROOT_DIR/deps}"
 MP_DIR="$WORKDIR/micropython/upstream"
-CMODS_DIR="$WORKDIR/seedsigner-c-modules"
 
 if [ ! -e "$MP_DIR/.git" ]; then
   echo "ERROR: expected MicroPython repo at: $MP_DIR"
-  exit 1
-fi
-
-if [ ! -e "$CMODS_DIR/.git" ]; then
-  echo "ERROR: expected seedsigner-c-modules repo at: $CMODS_DIR"
   exit 1
 fi
 
@@ -27,7 +21,6 @@ HEAD_SHA="$(git rev-parse HEAD)"
 echo "Builder root: $ROOT_DIR"
 echo "Sources: $WORKDIR"
 echo "MicroPython repo: $(git rev-parse --show-toplevel)"
-echo "Custom modules repo: $CMODS_DIR"
 echo "HEAD: $HEAD_SHA"
 
 if [ -n "$(git status --porcelain --ignore-submodules)" ]; then
