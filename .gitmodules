@@ -7,6 +7,9 @@
 [submodule "deps/secp256k1"]
 	path = deps/secp256k1
 	url = https://github.com/ltcmweb/secp256k1.git
+[submodule "ports/esp32/bc-ur"]
+	path = ports/esp32/bc-ur
+	url = https://github.com/Blockstream/esp32_bc-ur.git
 [submodule "ports/esp32/k_quirc"]
 	path = ports/esp32/k_quirc
 	url = https://github.com/odudex/k_quirc.git

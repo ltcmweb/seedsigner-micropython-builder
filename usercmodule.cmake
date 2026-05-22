@@ -5,6 +5,7 @@ target_sources(usermod_dm INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/bindings/modmweb_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/bindings/modquirc_bindings.c
     ${CMAKE_CURRENT_LIST_DIR}/bindings/modsecp256k1_bindings.c
+    ${CMAKE_CURRENT_LIST_DIR}/bindings/modur.cpp
     ${CMAKE_CURRENT_LIST_DIR}/lvgl/fonts/Font_Awesome_6_Free_24.c
     ${CMAKE_CURRENT_LIST_DIR}/lvgl/fonts/Font_Awesome_6_Free_36.c
     ${CMAKE_CURRENT_LIST_DIR}/lvgl/fonts/Inconsolata_Regular.c
@@ -36,8 +37,9 @@ target_sources(usermod_dm INTERFACE
 target_include_directories(usermod_dm INTERFACE
     ${BOARD_CONFIG_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/deps/secp256k1
-    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/k_quirc/include
+    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/bc-ur/src
     ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/board_common/include
+    ${CMAKE_CURRENT_LIST_DIR}/ports/esp32/k_quirc/include
 )
 
 target_compile_options(usermod_dm INTERFACE
@@ -47,6 +49,7 @@ target_compile_options(usermod_dm INTERFACE
 # Link bindings against ESP-IDF component libs instead of compiling component C++
 # sources in usermod qstr extraction.
 target_link_libraries(usermod_dm INTERFACE
+    __idf_bc-ur
     __idf_k_quirc
     __idf_mweb
 )
