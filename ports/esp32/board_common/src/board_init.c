@@ -176,12 +176,11 @@ void seedsigner_board_startup(void)
 #else
     /* Standard SPI boards (ST7796, ST7789) */
     lvgl_port_display_cfg_t disp_cfg = {
-        .io_handle     = io_handle,
-        .panel_handle  = panel_handle,
-        .hres          = BOARD_LCD_H_RES,
-        .vres          = BOARD_LCD_V_RES,
-        .buffer_size   = BOARD_LCD_H_RES * BOARD_LCD_V_RES,
-        .double_buffer = true,
+        .io_handle    = io_handle,
+        .panel_handle = panel_handle,
+        .hres         = BOARD_LCD_H_RES,
+        .vres         = BOARD_LCD_V_RES,
+        .buffer_size  = BOARD_LCD_H_RES * BOARD_LCD_V_RES,
         .flags = {
             .buff_dma     = 1,
             .buff_spiram  = 1,
@@ -193,7 +192,9 @@ void seedsigner_board_startup(void)
     disp_out = lvgl_port_add_disp(&disp_cfg);
 #endif
 
+    lvgl_port_lock(0);
     lv_display_set_rotation(disp_out, LV_DISPLAY_ROTATION_90);
+    lvgl_port_unlock();
 
 #if defined(BOARD_DISPLAY_MIRROR_X) && BOARD_DISPLAY_MIRROR_X
     esp_lcd_panel_mirror(panel_handle, true, false);

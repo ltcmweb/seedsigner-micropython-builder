@@ -8,7 +8,8 @@ bool mod_lvgl_load(Canvas *canvas, const uint8_t *data, size_t len) {
         .data = data,
     };
     lv_image_decoder_args_t dec_args = { 0 };
-    lv_image_decoder_open(&dsc, &img_dsc, &dec_args);
+    if (lv_image_decoder_open(&dsc, &img_dsc, &dec_args) != LV_RESULT_OK)
+        return false;
 
     canvas->w = dsc.header.w;
     canvas->h = dsc.header.h;
