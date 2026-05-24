@@ -3,7 +3,7 @@
 
 uint8_t *pxTaskGetStackStart(TaskHandle_t xTask);
 void tinygo_init(void *heap, size_t heap_size, void *glob, void *glob_end, void *stack);
-char *mweb(const char *fn, const char *req);
+uint8_t *mweb(const char *fn, const uint8_t *m, size_t mlen, char **err);
 extern char _data_start, _bss_end;
 
 static mp_obj_t mp_mweb_init(mp_obj_t stack_size_obj, mp_obj_t heap_size_obj) {
@@ -17,9 +17,17 @@ static mp_obj_t mp_mweb_init(mp_obj_t stack_size_obj, mp_obj_t heap_size_obj) {
 }
 static MP_DEFINE_CONST_FUN_OBJ_2(init_obj, mp_mweb_init);
 
-static mp_obj_t mp_mweb(mp_obj_t fn_obj, mp_obj_t req_obj) {
-    char *resp = mweb(mp_obj_str_get_str(fn_obj), mp_obj_str_get_str(req_obj));
-    mp_obj_t resp_obj = mp_obj_new_str(resp, strlen(resp));
+static mp_obj_t mp_mweb(mp_obj_t fn_obj, mp_obj_t m_obj) {
+    mp_buffer_info_t m;
+    mp_get_buffer_raise(m_obj, &m, MP_BUFFER_READ);
+    char *err = NULL;
+    uint8_t *resp = mweb(mp_obj_str_get_str(fn_obj), m.buf, m.len, &err);
+    if (err) {
+        mp_obj_t err_obj = mp_obj_new_str(err, strlen(err));
+        free(err);
+        return err_obj;
+    }
+    mp_obj_t resp_obj = mp_obj_new_bytes(resp + 4, *(uint32_t*)resp);
     free(resp);
     return resp_obj;
 }
