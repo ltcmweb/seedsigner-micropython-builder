@@ -1,4 +1,4 @@
-#define MICROPY_GC_INITIAL_HEAP_SIZE        (3584 * 1024)
+#define MICROPY_GC_INITIAL_HEAP_SIZE        (3456 * 1024)
 #define MP_PLAT_ALLOC_HEAP                  malloc
 
 #include <mpconfigport.h>
