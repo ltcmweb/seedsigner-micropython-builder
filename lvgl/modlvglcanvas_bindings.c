@@ -1,4 +1,5 @@
 #include "py/obj.h"
+#include "py/objarray.h"
 #include "py/runtime.h"
 #include "py/gc.h"
 #include "mod_lvgl.h"
@@ -70,21 +71,10 @@ static MP_DEFINE_CONST_FUN_OBJ_1(canvas_size_obj, canvas_size);
 static mp_obj_t canvas_tobytes(mp_obj_t self_in) {
     canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
 
-    return mp_obj_new_memoryview('B', self->canvas.size, self->canvas.buf);
+    byte typecode = 'B' | MP_OBJ_ARRAY_TYPECODE_FLAG_RW;
+    return mp_obj_new_memoryview(typecode, self->canvas.size, self->canvas.buf);
 }
 static MP_DEFINE_CONST_FUN_OBJ_1(canvas_tobytes_obj, canvas_tobytes);
-
-static mp_obj_t canvas_setbytes(mp_obj_t self_in, mp_obj_t data_in) {
-    canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
-
-    mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data_in, &bufinfo, MP_BUFFER_READ);
-
-    memcpy(self->canvas.buf, bufinfo.buf, self->canvas.size);
-
-    return mp_const_none;
-}
-static MP_DEFINE_CONST_FUN_OBJ_2(canvas_setbytes_obj, canvas_setbytes);
 
 static mp_obj_t canvas_copyto(mp_obj_t self_in, mp_obj_t other_in, mp_obj_t pos_in) {
     canvas_obj_t *self = MP_OBJ_TO_PTR(self_in);
@@ -117,7 +107,6 @@ static MP_DEFINE_CONST_FUN_OBJ_3(canvas_copyto_obj, canvas_copyto);
 static const mp_rom_map_elem_t canvas_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_size), MP_ROM_PTR(&canvas_size_obj) },
     { MP_ROM_QSTR(MP_QSTR_tobytes), MP_ROM_PTR(&canvas_tobytes_obj) },
-    { MP_ROM_QSTR(MP_QSTR_setbytes), MP_ROM_PTR(&canvas_setbytes_obj) },
     { MP_ROM_QSTR(MP_QSTR_copyto), MP_ROM_PTR(&canvas_copyto_obj) },
     { MP_ROM_QSTR(MP_QSTR___del__), MP_ROM_PTR(&canvas_del_obj) },
 };

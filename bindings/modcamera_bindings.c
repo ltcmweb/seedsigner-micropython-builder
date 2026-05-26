@@ -22,9 +22,10 @@ static mp_obj_t camera_stop() {
 }
 static MP_DEFINE_CONST_FUN_OBJ_0(camera_stop_obj, camera_stop);
 
-static mp_obj_t camera_read(mp_obj_t buf_obj) {
+static mp_obj_t camera_read(mp_obj_t buf_obj, mp_obj_t y_obj) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(buf_obj, &bufinfo, MP_BUFFER_WRITE);
+    int x = mp_obj_get_int(y_obj);
 
     board_camera_frame_t frame;
     esp_err_t err = board_camera_fb_get(&frame, 0);
@@ -32,24 +33,22 @@ static mp_obj_t camera_read(mp_obj_t buf_obj) {
         mp_raise_msg(&mp_type_RuntimeError, MP_ERROR_TEXT("camera read failed"));
     }
 
-    if (bufinfo.len < frame.len) {
-        board_camera_fb_return(&frame);
-        mp_raise_msg(&mp_type_ValueError, MP_ERROR_TEXT("output buffer too small"));
-    }
-
     uint16_t *p = (uint16_t*)bufinfo.buf;
-    for (int x = 0; x < frame.width; x++) {
+    uint16_t *end = (uint16_t*)(bufinfo.buf + bufinfo.len);
+    for (; x < frame.width; x++) {
         uint16_t *q = (uint16_t*)frame.buf + x;
         for (int y = 0; y < frame.height; y++) {
+            if (p >= end) goto out;
             *p++ = __builtin_bswap16(*q);
             q += frame.width;
         }
     }
 
+out:
     board_camera_fb_return(&frame);
     return mp_const_none;
 }
-static MP_DEFINE_CONST_FUN_OBJ_1(camera_read_obj, camera_read);
+static MP_DEFINE_CONST_FUN_OBJ_2(camera_read_obj, camera_read);
 
 static const mp_rom_map_elem_t camera_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_camera) },
